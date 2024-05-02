@@ -25,9 +25,4 @@ db.init_app(app)
 Migrate(app, db)
 
 if __name__ == "__main__":
-    # START OF OUT OF SCOPE
-    # THIS IS OUT OF SCOPE. THIS STATEMENT IS USED TO FILL DEFAULT CONTENT
-    with db.get_engine().connect() as con:
-        con.execute(text("INSERT INTO accounts(id, name, password, balance, active) select 1, 'carter', '8ea8bc2d', 10000, 1 WHERE NOT EXISTS (select id from accounts where id = 1);"))
-    # END OF OUT OF SCOPE
     app.run(debug=True, host="0.0.0.0", port=5000)

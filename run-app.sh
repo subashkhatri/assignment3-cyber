@@ -17,10 +17,12 @@ then
     python3 -m venv $(pwd)/.venv
 fi
 
-# activate venv
+echo "Activating venv"
 . .venv/bin/activate
 
-pip install -r requirements.txt
+echo "Installing Python requirements"
+
+pip install -r requirements.txt > /dev/null
 
 echo "Running Database setup"
 flask db init &> /dev/null
