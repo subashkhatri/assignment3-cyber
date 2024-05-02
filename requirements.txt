@@ -1,0 +1,6 @@
+Flask
+flask_wtf
+wtforms
+flask_sqlalchemy
+flask_migrate
+requests

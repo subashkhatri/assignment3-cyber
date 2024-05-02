@@ -1,0 +1,12 @@
+﻿{% extends "base.html" %}
+{% block content %}
+    <div class="jumbotron">
+        <h1>All of our valuable customers</h1>
+        <br />
+        <ul>
+          {% for item in accounts %}
+            <li>{{item}}</li>
+          {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

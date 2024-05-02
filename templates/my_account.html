@@ -1,0 +1,119 @@
+﻿{% extends "base.html" %} {% block content %}
+<div class="jumbotron">
+  {% if session['username'] %}
+
+  <h1>Welcome to your Rewards!</h1>
+  <br />
+  <p>As you bank with us, you recieve Charles Dollars (C$), you can use these points to purchase items from our rewards store.</p>
+  <h4>
+    Your Account ID {{ account.id }} has a balance of C$ {{ account.balance }}
+  </h4>
+  <hr />
+  <div class="row">
+    <div class="col-md-6">
+      <h4>Request more points</h4>
+      <p>Talk to our admins, they may give you some points.</p>
+      <form method="POST">
+        {{ message_form.hidden_tag()}}
+        <div class="form-group">
+          <strong>{{ message_form.message_text.label }}</strong>
+          {{ message_form.message_text(class="form-control") }}
+          <small></small>
+        </div>
+        {{ message_form.message(class="btn btn-success") }}
+      </form>
+    </div>
+    
+    <div class="col-md-6">
+      <h4>Transfer Points</h4>
+      <p>Want to transfer points to another user? Use the below</p>
+      <form method="POST">
+        {{ transfer_form.hidden_tag()}} {{
+        transfer_form.transfer_from(class="form-control") }}
+        <div class="form-group">
+          <strong>{{ transfer_form.account_id.label }}</strong>
+          {{ transfer_form.account_id(class="form-control") }}
+          <small id="id-checker"></small>
+        </div>
+        <div class="form-group">
+          <strong>{{ transfer_form.amount.label }}</strong>
+          {{ transfer_form.amount(class="form-control") }}
+        </div>
+        {{ transfer_form.transfer(disabled=True, class="btn btn-primary") }}
+      </form>
+    </div>
+  </div>
+  <hr />
+  <h4>Your transactions</h4>
+  <table class="table" id="transactions-table" style="text-align: left">
+    <!-- 2vw = 2 times view width (dynmaic text size) -->
+    <thead>
+      <tr>
+        <!-- <th scope="col">#</th> -->
+        <th scope="col">Type</th>
+        <th scope="col">Description</th>
+        <th scope="col">Amount</th>
+        <th scope="col">DateTime</th>
+        <th scope="col">Statement Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for transaction in transactions %}
+      <tr>
+        <!-- <th scope="row">{{ transaction.id }}</th> -->
+        <td>{{ transaction.transaction_type }}</td>
+        <td>{{ transaction.description }}</td>
+        <td>${{ transaction.amount }}</td>
+        <td>{{ transaction.date }}</td>
+        {% autoescape false %}
+        <td>{{transaction.statement_description}}</td>
+        {% endautoescape %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% else %}
+  <h1>Please log in!</h1>
+  <a href="{{ url_for('display.login') }}">Login</a>
+  {% endif %}
+</div>
+<script>
+  document.getElementById("transfer_from").hidden = true;
+  let account_id = document.getElementById("account_id");
+  let checker = document.getElementById("id-checker");
+  let transfer = document.getElementById("transfer");
+  document.onload = function () {
+    transfer.disabled = true;
+  };
+
+  account_id.onkeyup = function () {
+    if (account_id.value == "") {
+      account_id.style.borderColor = "#ced4da";
+      checker.innerHTML = "";
+      transfer.disabled = true;
+    } else {
+      fetch("/json/account/id?account_id=" + account_id.value).then(function (response) {
+        response.json().then(function (data) {
+          checker.innerHTML = data.account;
+          if (data.account == "valid") {
+            account_id.style.borderColor = "#28a745";
+            checker.style.color = "#28a745";
+            transfer.disabled = false;
+          } else {
+            account_id.style.borderColor = "#dc3545";
+            checker.style.color = "#dc3545";
+            transfer.disabled = true;
+          }
+        });
+      });
+    }
+  };
+</script>
+<style>
+  @media only screen and (max-width: 576px){
+    body #transactions-table{
+      font-size:3vw; /* 2vw = 2 times view width (dynmaic text size)  */
+    }
+</style>
+{% endblock %}

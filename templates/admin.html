@@ -1,0 +1,36 @@
+﻿{% extends "base.html" %} {% block content %}
+  {% autoescape false %}
+    <div class="jumbotron">
+      <div class="wrapperDiv">
+        {% if cookies.admin %}
+        <h1>Admin Portal</h1>
+        <p>Here's everyones messages</p>
+        <table class="messageTable">
+          <thead>
+            <th>Date</th>
+            <th>User</th>
+            <th>Message</th>
+          </thead>
+          <tbody>
+            {% if messages %}
+              {% for m in messages %}
+              <tr>
+                <td>{{m.date}}</td>
+                <td>{{m.user_id}}</td>
+                <td>{{m.message}}</td>
+              </tr>
+              {% endfor %}
+              {% else %}
+              <tr>
+                <td>No messages</td>
+              </tr>
+              {%endif%}
+          </tbody>
+        </table>
+        {% else %}
+          <h1>GO AWAY</h1>
+        {% endif %}
+      </div>
+    </div>
+  {% endautoescape %}
+{% endblock %}
