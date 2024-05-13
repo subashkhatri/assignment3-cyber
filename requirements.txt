@@ -1,6 +1,5 @@
 Flask
 flask_wtf
 wtforms
-flask_sqlalchemy
-flask_migrate
+flask-sqlalchemy
 requests

@@ -3,12 +3,9 @@ export FLASK_APP=app.py
 export FLASK_DEBUG=true
 
 # Check if venv is installed
-if ! which virtualenv &> /dev/null
-then
-    echo "You don't have python3-venv installed.. Installing now.."
-    sudo apt update > /dev/null
-    sudo apt install -y python3-venv > /dev/null
-fi
+echo "Updating dependencies"
+sudo apt-get update > /dev/null
+sudo apt-get install -y python3 python3-pip python3-venv > /dev/null
 
 # Check if there's a venv
 if ! ls $(pwd)/.venv &> /dev/null
@@ -23,11 +20,7 @@ echo "Activating venv"
 echo "Installing Python requirements"
 
 pip install -r requirements.txt > /dev/null
-
-echo "Running Database setup"
-flask db init &> /dev/null
-flask db migrate &> /dev/null
-flask db upgrade &> /dev/null
+pip install Flask-Migrate > /dev/null
 
 echo "Starting app server now"
 flask run

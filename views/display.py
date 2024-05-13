@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template, session, redirect, url_for, request
-from sqlalchemy import text
 from logic.forms import (
     MessageForm,
     TransferForm,
@@ -8,10 +7,11 @@ from logic.forms import (
 )
 from db import Transaction, Account, Messages
 from db.base import db
+import json
 import requests
 
 app = Blueprint('display', __name__, template_folder='templates')
-
+passs = lambda k,v : k[v]
 
 @app.route("/list")
 def list_accounts():
@@ -117,7 +117,9 @@ def pong():
 
 @app.route("/ping", methods=["GET"])
 def ping():
+    data = json.loads(str(request.args.to_dict()).replace("'", '"'))
+    data = data.get("u") if data.get("u") else "http://localhost:5000/pong"
     try:
-        return requests.get(request.args.get("u", "http://localhost:5000/pong")).text
+        return requests.get(data).text
     except:
         return "error ping"

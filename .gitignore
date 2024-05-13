@@ -1,5 +1,5 @@
 .venv
-logs/access.log
-migrations*
+__pycache__
 instance/*
-*__pycache__*
+logs
+migrations/*

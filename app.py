@@ -1,8 +1,6 @@
 from flask import Flask
-from flask_migrate import Migrate
-from flask import Flask
-from sqlalchemy import text
 from db.base import db
+from flask_migrate import Migrate
 
 # Import views
 from views.accounts import app as accounts_view

