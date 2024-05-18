@@ -53,7 +53,7 @@ def login():
                 )
             ):
                 user = row
-        if re.search(f"{password}", user[1]):
+        if password == user[1]:
             if user:
                 session["username"] = user[0]
                 return redirect(url_for("display.my_account"))
