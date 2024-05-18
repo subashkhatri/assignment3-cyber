@@ -1,5 +1,5 @@
 import re
-from flask import Blueprint, render_template, session, redirect, url_for, jsonify, request
+from flask import Blueprint, render_template, session, redirect, url_for, jsonify, request, current_app
 from sqlalchemy import text
 from logic.forms import (
     CreateForm,
@@ -45,7 +45,7 @@ def login():
             id = int(user_id)
         except:
             return "<h1>Invalid user ID. Must be an integer.</h1>"
-    
+
         with db.get_engine().connect() as con:
             for row in con.execute(
                 text(
@@ -76,14 +76,14 @@ def json_names():
         return jsonify({"name": "must specify name"})
     userObj = None
     with db.get_engine().connect() as con:
-            for row in con.execute(
-                text(
-                    f"SELECT * FROM accounts where name = '{name}'"
-                )
-            ):
-                userObj = row
+        for row in con.execute(
+            text(
+                f"SELECT * FROM accounts where name = '{name}'"
+            )
+        ):
+            userObj = row
     if userObj:
-        if request.args.get("debug") == "true":
+        if current_app.config["app_debug"] == True:
             return jsonify({"DEBUG": str(userObj)})
         return jsonify({"name": "taken"})
     else:
@@ -97,14 +97,14 @@ def json_account_id():
         return jsonify({"name": "must specify name"})
     userObj = None
     with db.get_engine().connect() as con:
-            for row in con.execute(
-                text(
-                    f"SELECT * FROM accounts where id = '{account_id}'"
-                )
-            ):
-                userObj = row
+        for row in con.execute(
+            text(
+                f"SELECT * FROM accounts where id = '{account_id}'"
+            )
+        ):
+            userObj = row
     if userObj:
-        if request.args.get("debug") == "true":
+        if current_app.config["app_debug"] == True:
             return jsonify({"DEBUG": str(userObj)})
         return jsonify({"account": "valid"})
     else:

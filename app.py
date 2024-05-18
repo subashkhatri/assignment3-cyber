@@ -18,6 +18,7 @@ app.config["SECRET_KEY"] = "mysecretkey"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 app.config["DEBUG"] = True
+app.config["app_debug"] = False
 
 db.init_app(app)
 Migrate(app, db)
