@@ -74,37 +74,37 @@ def json_names():
     name = request.args.get("name")
     if not name:
         return jsonify({"name": "must specify name"})
-    userObj = None
+
     with db.get_engine().connect() as con:
-        for row in con.execute(
-            text(
-                f"SELECT * FROM accounts where name = '{name}'"
-            )
-        ):
-            userObj = row
+        result = con.execute(
+            text("SELECT * FROM accounts WHERE name = :name"),
+            {'name': name}
+        )
+        userObj = result.fetchone()
+
     if userObj:
-        if current_app.config["app_debug"] == True:
+        if current_app.config["app_debug"]:
             return jsonify({"DEBUG": str(userObj)})
         return jsonify({"name": "taken"})
     else:
         return jsonify({"name": "available"})
 
 
-@app.route("/json/account/id")
+@@app.route("/json/account/id")
 def json_account_id():
     account_id = request.args.get("account_id")
     if not account_id:
         return jsonify({"name": "must specify name"})
-    userObj = None
+
     with db.get_engine().connect() as con:
-        for row in con.execute(
-            text(
-                f"SELECT * FROM accounts where id = '{account_id}'"
-            )
-        ):
-            userObj = row
+        result = con.execute(
+            text("SELECT * FROM accounts WHERE id = :account_id"),
+            {'account_id': account_id}
+        )
+        userObj = result.fetchone()
+
     if userObj:
-        if current_app.config["app_debug"] == True:
+        if current_app.config["app_debug"]:
             return jsonify({"DEBUG": str(userObj)})
         return jsonify({"account": "valid"})
     else:

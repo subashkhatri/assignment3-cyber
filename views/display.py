@@ -91,10 +91,14 @@ def delete_account():
         id = form.id.data
         password = form.password.data
         account = Account.query.get(id)
-        if account.password == password or password == request.cookies.get("testing"):
+
+        if account and account.password == password:
             account.active = False
             db.session.commit()
-        return redirect(url_for("display.list_accounts"))
+            return redirect(url_for("display.list_accounts"))
+        else:
+            return redirect(url_for("delete_account"))
+
     return render_template("delete_account.html", form=form)
 
 
