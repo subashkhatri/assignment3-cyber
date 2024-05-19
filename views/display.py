@@ -1,4 +1,5 @@
 import re
+import html
 from flask import Blueprint, render_template, session, redirect, url_for, jsonify, request
 from logic.forms import (
     MessageForm,
@@ -13,6 +14,10 @@ import requests
 
 app = Blueprint('display', __name__, template_folder='templates')
 def passs(k, v): return k[v]
+
+
+def html_encode(input_string):
+    return html.escape(input_string)
 
 
 def is_valid_input(input_string):
@@ -46,7 +51,7 @@ def my_account():
             error_message = "Invalid input"
         else:
             messageDb = Messages(account_id=account.id,
-                                 message=message_form.message_text.data)
+                                 message=html.escape(message_form.message_text.data))
             db.session.add(messageDb)
             db.session.commit()
             return redirect(url_for("display.my_account"))
