@@ -61,6 +61,7 @@ def login():
         if password == user[1]:  # CB-01-001 changes
             if user:
                 session["username"] = user[0]
+                # session["usertype"] = "admin"
                 return redirect(url_for("display.my_account"))
         else:
             return "<h1>Invalid Account ID & Password combination</h1>"
@@ -71,6 +72,7 @@ def login():
 @ app.route("/logout", methods=["GET"])
 def logout():
     session["username"] = None
+    session.clear()  # CB-05-001 Changes
     return redirect(url_for("base.index"))
 
 
