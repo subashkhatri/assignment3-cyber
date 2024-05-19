@@ -10,6 +10,9 @@ from db.base import db
 
 app = Blueprint('accounts', __name__, template_folder='templates')
 
+def is_valid_input(input_string):
+    return re.match("^[A-Za-z0-9 ]*$", input_string) is not None
+
 
 @app.route("/create", methods=["GET", "POST"])
 def create_account():
@@ -72,8 +75,14 @@ def logout():
 @app.route("/json/account/name")
 def json_names():
     name = request.args.get("name")
+
     if not name:
         return jsonify({"name": "must specify name"})
+
+    if not is_valid_input(name):
+        return jsonify({"error": "Invalid input"}), 400
+
+    userObj = None
 
     with db.get_engine().connect() as con:
         result = con.execute(
@@ -90,11 +99,16 @@ def json_names():
         return jsonify({"name": "available"})
 
 
-@@app.route("/json/account/id")
+@app.route("/json/account/id")
 def json_account_id():
     account_id = request.args.get("account_id")
     if not account_id:
         return jsonify({"name": "must specify name"})
+
+    if not re.match("^[0-9]+$", account_id):
+        return jsonify({"error": "Invalid account ID"}), 400
+
+    userObj = None
 
     with db.get_engine().connect() as con:
         result = con.execute(
