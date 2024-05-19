@@ -22,6 +22,7 @@
           <strong>{{ message_form.message_text.label }}</strong>
           {{ message_form.message_text(class="form-control") }}
           <small></small>
+          <span class="text-danger">{{error_message}}</span>
         </div>
         {{ message_form.message(class="btn btn-success") }}
       </form>
