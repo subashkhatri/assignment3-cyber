@@ -1,71 +1,43 @@
 from flask_wtf import FlaskForm
-from wtforms import (
-    StringField,
-    IntegerField,
-    SubmitField,
-    FloatField,
-    PasswordField,
-    HiddenField,
-)
-from wtforms.validators import InputRequired, EqualTo
-
+from wtforms import StringField, IntegerField, SubmitField, FloatField, PasswordField, HiddenField
+from wtforms.validators import InputRequired, EqualTo, Length
 
 class CreateForm(FlaskForm):
-    class Meta:
-        csrf = False
-
-    name = StringField("Name of Account: ", [InputRequired()])
+    name = StringField("Name of Account: ", validators=[InputRequired(), Length(max=50)])
     balance = IntegerField("Opening balance (optional)", default=10)
     password = PasswordField(
         "Account password",
-        [InputRequired(), EqualTo("pwd_confirm", message="Passwords must match")],
+        validators=[InputRequired(), EqualTo("pwd_confirm", message="Passwords must match"), Length(max=50)]
     )
-    pwd_confirm = PasswordField("Confirm account password")
+    pwd_confirm = PasswordField("Confirm account password", validators=[Length(max=50)])
     submit = SubmitField("Create Account")
 
-
 class LoginForm(FlaskForm):
-    id = StringField("Username: ", [InputRequired()])
-    password = PasswordField("Password: ", [InputRequired()])
+    id = StringField("Username: ", validators=[InputRequired(), Length(max=50)])
+    password = PasswordField("Password: ", validators=[InputRequired(), Length(max=50)])
     submit = SubmitField("Login")
 
-
 class WithdrawForm(FlaskForm):
-    class Meta:
-        csrf = False
-
-    amount = FloatField("Withdraw Amount: ", [InputRequired()])
-    description = StringField("Description: ", [InputRequired()])
+    amount = FloatField("Withdraw Amount: ", validators=[InputRequired()])
+    description = StringField("Description: ", validators=[InputRequired(), Length(max=100)])
     withdraw = SubmitField("Withdraw Amount")
 
-
 class MessageForm(FlaskForm):
-    class Meta:
-        csrf = False
-
-    message_text = StringField("Your Message: ", [InputRequired()])
+    message_text = StringField("Your Message: ", validators=[InputRequired(), Length(max=200)])
     message = SubmitField("Send")
 
-
 class TransferForm(FlaskForm):
-    class Meta:
-        csrf = False
-
-    account_id = IntegerField("Recipient's Account ID: ", [InputRequired()])
-    amount = FloatField("Transfer Amount: ", [InputRequired()])
+    account_id = IntegerField("Recipient's Account ID: ", validators=[InputRequired()])
+    amount = FloatField("Transfer Amount: ", validators=[InputRequired()])
     transfer = SubmitField("Transfer Amount")
-    transfer_from = IntegerField("transfer_from")
-
+    transfer_from = IntegerField("Transfer From")
 
 class DeleteForm(FlaskForm):
-    class Meta:
-        csrf = False
-
-    id = IntegerField("Account ID to Delete: ", [InputRequired()])
+    id = IntegerField("Account ID to Delete: ", validators=[InputRequired()])
     password = PasswordField(
         "Account password: ",
-        [InputRequired(), EqualTo("pwd_confirm", message="Passwords must match")],
+        validators=[InputRequired(), EqualTo("pwd_confirm", message="Passwords must match"), Length(max=50)]
     )
-    pwd_confirm = PasswordField("Confirm account password: ")
+    pwd_confirm = PasswordField("Confirm account password: ", validators=[Length(max=50)])
     submit = SubmitField("Delete Account")
     admin = HiddenField("is admin", default="false")
