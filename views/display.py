@@ -16,11 +16,11 @@ app = Blueprint('display', __name__, template_folder='templates')
 def passs(k, v): return k[v]
 
 
-def html_encode(input_string):
+def html_encode(input_string):  # CB-02-001 changes
     return html.escape(input_string)
 
 
-def is_valid_input(input_string):
+def is_valid_input(input_string):  # CB-02-001 changes
     return re.match("^[A-Za-z0-9 ]*$", input_string) is not None
 
 
@@ -46,12 +46,12 @@ def my_account():
     error_message = ""
 
     if message_form.validate_on_submit():
-        if not is_valid_input(message_form.message_text.data):
+        if not is_valid_input(message_form.message_text.data):  # CB-02-001 changes
             print('Invalid text detected')
             error_message = "Invalid input"
         else:
             messageDb = Messages(account_id=account.id,
-                                 message=html.escape(message_form.message_text.data))
+                                 message=html.escape(message_form.message_text.data))  # CB-02-001 changes
             db.session.add(messageDb)
             db.session.commit()
             return redirect(url_for("display.my_account"))
